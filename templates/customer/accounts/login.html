@@ -27,11 +27,17 @@
             <div class="row">
                 <!-- Registered-Customers Start -->
                 <div class="col-md-12">
-                    <form action="{% url 'login' %}" method="post">
+                    <form action="{% url 'customer_login' %}" method="post">
                         {% csrf_token %}
                         <div class="registered-customers">
                             <h2 class="login-title">REGISTERED CUSTOMERS</h2>
+
                             <div class="registered">
+                                {% if error %}
+                                <div class="alert alert-danger">
+                                    {{ error }}
+                                </div>
+                                {% endif %}
                                 <p>If you have an account with us, Please log in.</p>
                                 <div class="row">
                                     <div class="col-md-12">
