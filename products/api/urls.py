@@ -7,5 +7,5 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("products/", views.ProductApiView.as_view()),
+    path("home/", views.HomeApiView.as_view()),
 ]

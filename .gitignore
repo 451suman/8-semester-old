@@ -24,6 +24,10 @@ staticfiles/
 # But keep __init__.py files in migrations
 !**/migrations/__init__.py
 
+# Ignore image files
+*.jpg
+*.jpeg
+*.png
 
 # 🛑 IDE & Editor Files
 .vscode/

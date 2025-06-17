@@ -40,20 +40,37 @@ class TagSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductImage
-        fields = ["id", "image"]
-
-
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     brand = BrandSerializer()
     colors = ColorSerializer(many=True)
     sizes = SizeSerializer(many=True)
     tag = TagSerializer(many=True)
-    product_images = ProductImageSerializer(many=True)
+    # product_images = ProductImageSerializer(many=True)
 
     class Meta:
         model = Product
         fields = "__all__"
+
+
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ["id", "image"]
+
+
+class NewProductSerializer(serializers.ModelSerializer):
+    product_images = ProductImageSerializer(many=True)
+
+    class Meta:
+        model = Product
+        fields = ["id", "name", "slug", "current_price", "product_images"]
+
+
+class FeaturedCategorySerializer(serializers.ModelSerializer):
+    # Correct the field name to 'products'
+    products = NewProductSerializer(many=True)
+
+    class Meta:
+        model = Category
+        fields = ["id", "name", "slug", "arranged", "products"]
