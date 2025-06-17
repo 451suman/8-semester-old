@@ -17,7 +17,7 @@ class HomeView(LoginRequiredMixin, ListView):
             new_products = Product.objects.prefetch_related("product_images").order_by(
                 "-created_at"
             )[:5]
-            cache.set("new_products", new_products, 60)  # cache for 5 minutes
+            # cache.set("new_products", new_products, 60)
         return new_products
 
     def get_context_data(self, **kwargs):
@@ -34,7 +34,25 @@ class HomeView(LoginRequiredMixin, ListView):
                 .filter(arranged__isnull=False)
                 .order_by("arranged")
             )
-            cache.set("categories", categories, 60)  # cache for 5 minutes
+            # cache.set("categories", categories, 60)
 
         context["categories"] = categories
         return context
+
+
+# Query 1: Get latest 5 Product objects
+# Query 2: Get product_images for those 5 products
+# Let’s say 5 categories are returned. Django will:
+# Query 3: Get Category objects
+# Query 4: Get related Product objects (for those categories)
+# Query 5: Get product_images for products in those categories
+# Query 6: Session query (django_session)
+# Query 7: Auth user query (accounts_customuser)
+
+
+class ProductListView(LoginRequiredMixin, ListView):
+    template_name = "customer/product/product_list.html"
+    queryset = Product.objects.prefetch_related("product_images").order_by(
+        "-created_at"
+    )
+    context_object_name = "products"

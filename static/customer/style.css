@@ -2539,7 +2539,7 @@ select {
 }
 
 .page-banner-area {
-  background: rgba(0, 0, 0, 0) url("img/banner/page-banner/1.jpg") no-repeat scroll center center;
+  background: rgba(0, 0, 0, 0) url("images/banner.png") no-repeat scroll center center;
 }
 
 .page-banner-area.photo-2 {

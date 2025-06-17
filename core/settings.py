@@ -28,7 +28,7 @@ SECRET_KEY = "django-insecure-0$buimc+op1kp#13nxlmtb@)9w$ed!adirk7)pio97t)5_$sf+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["172.28.48.1", "*"]
+ALLOWED_HOSTS = ["192.168.1.69", "*"]
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+    "rest_framework",
     "debug_toolbar",  # debug tool bar remove in production
     "accounts",
     "vendor",
@@ -171,3 +172,4 @@ CACHES = {
 
 
 LOGIN_URL = "/accounts/customer/login/"
+
