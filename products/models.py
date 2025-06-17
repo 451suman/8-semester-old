@@ -6,11 +6,20 @@ from vendor.models import Vendor
 
 
 class Category(TimeStampedModel):
+    arrange_choices = (
+        (1, "1"),
+        (2, "2"),
+        (3, "3"),
+        (4, "4"),
+        (5, "5"),
+        (6, "6"),
+    )
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, null=True)
     name = models.CharField(
         max_length=100,
     )
     slug = models.SlugField()
+    arranged = models.PositiveIntegerField(choices=arrange_choices, null = True, blank = True)
 
     class Meta:
         verbose_name_plural = "Categories"

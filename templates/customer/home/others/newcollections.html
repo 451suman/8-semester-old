@@ -1,10 +1,9 @@
-
 <div class="new-collection-area fix style-2 margin-bottom-80">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="section-title-2 bordr-rights">
-                    <h2 class="border-left-rights">New Collection</h2>
+                    <h2 class="border-left-rights " style="padding-top: 10px !important;">New Collection</h2>
                 </div>
             </div>
         </div>
@@ -16,11 +15,13 @@
                 <a href="#">
                     {% if product.product_images.all %}
                     {% with product.product_images.all|first as first_image %}
-                    <img class="primary-photo" src="{{ first_image.image.url }}" alt="{{ product.name }}" />
+                    <img class="primary-photo" style="width: 500px !important; height: 300px !important;"
+                        src="{{ first_image.image.url }}" alt="{{ product.name }}" />
                     {% endwith %}
                     {% if product.product_images.all|length > 1 %}
                     {% with product.product_images.all.1 as second_image %}
-                    <img class="secondary-photo" src="{{ second_image.image.url }}" alt="{{ product.name }}" />
+                    <img class="secondary-photo" style="width: 500px !important; height: 300px !important;"
+                        src="{{ second_image.image.url }}" alt="{{ product.name }}" />
                     {% endwith %}
                     {% endif %}
                     {% else %}
