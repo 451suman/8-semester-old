@@ -12,6 +12,7 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
     path("vendor/", include("vendor.urls")),
     path("products/", include("products.urls")),
+    
 ] + debug_toolbar_urls()
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
