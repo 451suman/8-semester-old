@@ -1,0 +1,91 @@
+<div class="single-product-aea margin-bottom-80" style="margin-top: 50px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5 col-sm-5 col-xs-12">
+                <div class="single-product-tab-content">
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        {% for image in product.product_images.all %}
+                        <div role="tabpanel" class="tab-pane {% if forloop.first %}active{% endif %}"
+                            id="img-{{ forloop.counter }}">
+                            <img src="{{ image.image.url }}" alt="{{ product.name }}" />
+                            <a href="{{ image.image.url }}" data-lightbox="roadtrip" data-title="{{ product.name }}">
+                                <span class="view-full-screen"><i class="sp-full-view"></i> view full screen</span>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Nav tabs -->
+                    <ul class="">
+                        {% for image in product.product_images.all %}
+                        <li class="{% if forloop.first %}active{% endif %}">
+                            <a href="#img-{{ forloop.counter }}" data-toggle="tab">
+                                <img src="{{ image.image.url }}" alt="{{ product.name }}" />
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-7 col-sm-7 col-xs-12">
+                <div class="single-product-description">
+                    <h3 class="title-3">{{ product.name }}</h3>
+                    <h4>Rs.{{ product.current_price }} {% if product.previous_price %} / <del>
+                            Rs.{{product.previous_price }} </del> {% endif %}</h4>
+
+                    <div class="pro-color">
+                        <span>Color</span>
+                        <a class="color-1" href="#"></a>
+                        <a class="color-2" href="#"></a>
+                        <a class="color-3" href="#"></a>
+                        <a class="color-4" href="#"></a>
+                        <a class="color-5" href="#"></a>
+                    </div>
+                    <div class="pro-size">
+                        <span>Size</span>
+                        <a href="#">xs</a>
+                        <a href="#">s</a>
+                        <a href="#">ml</a>
+                        <a href="#">xl</a>
+                        <a href="#">x</a>
+                    </div>
+
+                    <div class="product-counts fix margin-top-80">
+                        <form action="#">
+                            <div class="cart-plus-minus">
+                                <input type="text" value="1" />
+                            </div>
+                        </form>
+                        <div class="single-pro-add-cart">
+                            <a class="shop-now" href="#">Add to cart</a>
+                        </div>
+                    </div>
+
+                    <div class="single-pro-share">
+                        <ul>
+                            <li><a href="#"><i class="sp-share"></i><span>Share</span></a></li>
+                            <li><a href="#"><i class="sp-heart"></i><span>Add to Wishlist</span></a></li>
+                            <li><a href="#"><i class="sp-compare-alt"></i><span>Compare</span></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="categories-tags">
+                        <div class="categories">
+                            <span>CATEGORIES:</span>
+                            <a href="#">{{ product.category.name }}</a>
+                        </div>
+                        <div class="categories tags">
+                            <span>Tags:</span>
+                            {% for tag in product.tags.all %}
+                            <a href="#">{{ tag.name }}{% if not forloop.last %},{% endif %}</a>
+                            {% endfor %}
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="grid-view">
+        <div class="row shop-grid">
+            <!-- Single-product start -->
+            {% for product in products %}
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <div class="single-product">
+                    <div class="product-photo">
+                        <a href="{% url 'product_detail' slug=product.slug %}">
+                            {% if product.product_images.all %}
+                            {% with product.product_images.all|first as first_image %}
+                            <img class="primary-photo" src="{{ first_image.image.url }}" alt="{{ product.name }}" />
+                            {% endwith %}
+                            {% if product.product_images.all|length > 1 %}
+                            {% with product.product_images.all.1 as second_image %}
+                            <img class="secondary-photo" src="{{ second_image.image.url }}" alt="{{ product.name }}" />
+                            {% endwith %}
+                            {% endif %}
+                            {% else %}
+                            <img class="primary-photo" src="" alt="No image available" />
+                            {% endif %}
+
+                        </a>
+                        <div class="pro-action">
+                            <a href="#" class="action-btn"><i class="sp-heart"></i><span>Wishlist</span></a>
+                            <a href="#" class="action-btn"><i class="sp-shopping-cart"></i><span>Add to cart</span></a>
+                            <a href="#" class="action-btn"><i class="sp-compare-alt"></i><span>Compare</span></a>
+                        </div>
+                    </div>
+                    <div class="product-brief">
+                        <h2><a href="{% url 'product_detail' slug=product.slug %}">{{product.name}}</a></h2>
+                        <h3>Rs. {{product.current_price}}</h3>
+                    </div>
+                </div>
+            </div>
+            <!-- Single-product end -->
+            {% endfor %}
+        </div>
+    </div>
+
+</div>

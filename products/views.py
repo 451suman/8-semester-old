@@ -1,11 +1,13 @@
 from django.core.cache import cache
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
 from django.db.models import Prefetch
+from django.shortcuts import render, get_object_or_404
 from .models import Product, Category
 
 
-class HomeView(LoginRequiredMixin, ListView):
+class HomeView(ListView):
     template_name = "customer/home/home.html"
     model = Product
     context_object_name = "new_products"
@@ -56,3 +58,18 @@ class ProductListView(LoginRequiredMixin, ListView):
         "-created_at"
     )
     context_object_name = "products"
+    paginate_by = 9
+
+
+class ProductDetailView(View):
+    def get(self, request, slug):
+        product = get_object_or_404(
+            Product.objects.prefetch_related("product_images"),
+            slug=slug,
+            is_active=True,
+        )
+        return render(
+            request,
+            "customer/product_details/product_Details.html",
+            {"product": product},
+        )

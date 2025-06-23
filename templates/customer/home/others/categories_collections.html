@@ -31,7 +31,7 @@
                                 <!-- Single-product start -->
                                 <div class="single-product new-colect">
                                     <div class="product-photo" style="width: 250px !important;">
-                                        <a href="#">
+                                        <a href="{% url 'product_detail' slug=product.slug %}">
                                             {% with product.product_images.all|first as first_image %}
                                             {% if first_image %}
                                             <img class="primary-photo" src="{{ first_image.image.url }}"
@@ -65,7 +65,7 @@
                                             <a href="#"><i class="sp-star rating-1"></i></a>
                                             <a href="#"><i class="sp-star rating-2"></i></a>
                                         </div>
-                                        <h2><a href="#">{{ product.name }}</a></h2>
+                                        <h2><a href="{% url 'product_detail' slug=product.slug %}">{{ product.name }}</a></h2>
                                         <h3>${{ product.current_price }}</h3>
                                     </div>
                                 </div>
