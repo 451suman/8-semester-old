@@ -9,15 +9,15 @@ __pycache__/
 .Python
 .env
 .env.*
-*.sqlite3
+# *.sqlite3
 
 # 🛑 Django Logs & Migrations
 logs/
 *.log
 debug.log
-db.sqlite3
-media/
-staticfiles/
+# db.sqlite3
+# media/
+# staticfiles/
 # Ignore all migration files
 **/migrations/*.py
 
@@ -25,9 +25,9 @@ staticfiles/
 !**/migrations/__init__.py
 
 # Ignore image files
-*.jpg
-*.jpeg
-*.png
+# *.jpg
+# *.jpeg
+# *.png
 
 # 🛑 IDE & Editor Files
 .vscode/
@@ -72,12 +72,12 @@ celerybeat-schedule
 celerybeat.pid
 
 # 🛑 Database & Storage
-*.db
-*.sqlite3
-*.pgsql
-*.mysql
-*.log
-*.out
+# *.db
+# *.sqlite3
+# *.pgsql
+# *.mysql
+# *.log
+# *.out
 
 # 🛑 Coverage & Test Reports
 htmlcov/
