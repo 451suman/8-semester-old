@@ -94,40 +94,40 @@ class ProductDetailView(View):
         )
 
 
+from django.views import View
+from django.shortcuts import redirect, get_object_or_404
+from .models import Cart, CartProduct, Product
+
+
 class AddToCartView(EcomMixin, View):
     def get(self, request, pk):
-        # Get product
-        product_obj = Product.objects.get(id=pk)
-        # Check if cart exists
-        cart_id = self.request.session.get("cart_id", None)
+        # Get product or return 404 if not found
+        product_obj = get_object_or_404(Product, id=pk)
+
+        # Get cart ID from session
+        cart_id = request.session.get("cart_id", None)
+        cart_obj = None
+
         if cart_id:
-            cart_obj = Cart.objects.get(id=cart_id)
-            # Check if the product is already in the cart
-            this_product_in_cart = cart_obj.cartproduct_set.filter(product=product_obj)
+            try:
+                cart_obj = Cart.objects.get(id=cart_id)
+            except Cart.DoesNotExist:
+                cart_obj = None
 
-            # Items already in cart
-            if this_product_in_cart.exists():
-                cartproduct = this_product_in_cart.last()
-                cartproduct.quantity += 1
-                cartproduct.subtotal += product_obj.current_price
-                cartproduct.save()
-                cart_obj.total += product_obj.current_price
-                cart_obj.save()
-
-            # New item is added in cart
-            else:
-                cartproduct = CartProduct.objects.create(
-                    cart=cart_obj,
-                    product=product_obj,
-                    rate=product_obj.current_price,
-                    quantity=1,
-                    subtotal=product_obj.current_price,
-                )
-                cart_obj.total += product_obj.current_price
-                cart_obj.save()
-        else:
+        # If cart does not exist, create a new one and save in session
+        if not cart_obj:
             cart_obj = Cart.objects.create(total=0)
+            request.session["cart_id"] = cart_obj.id
 
+        # Check if product is already in cart
+        this_product_in_cart = cart_obj.cartproduct_set.filter(product=product_obj)
+
+        if this_product_in_cart.exists():
+            cartproduct = this_product_in_cart.last()
+            cartproduct.quantity += 1
+            cartproduct.subtotal += product_obj.current_price
+            cartproduct.save()
+        else:
             cartproduct = CartProduct.objects.create(
                 cart=cart_obj,
                 product=product_obj,
@@ -135,12 +135,17 @@ class AddToCartView(EcomMixin, View):
                 quantity=1,
                 subtotal=product_obj.current_price,
             )
-            cart_obj.total += product_obj.current_price
-            cart_obj.save()
-            request.session["cart_id"] = cart_obj.id  # Save cart_id in session
 
-        # Redirect to the cart view
+        # Update cart total
+        # (better to sum subtotals in case of changes)
+        cart_obj.total = sum(cp.subtotal for cp in cart_obj.cartproduct_set.all())
+        cart_obj.save()
+
         return redirect("my-cart")
+
+
+from django.views.generic import TemplateView
+from .models import Cart, CartProduct  # make sure to import your models
 
 
 class MyCartView(EcomMixin, TemplateView):
@@ -151,13 +156,18 @@ class MyCartView(EcomMixin, TemplateView):
         cart_id = self.request.session.get("cart_id")
 
         cart = None
+        cart_products = []
+
         if cart_id:
             try:
                 cart = Cart.objects.get(id=cart_id)
+                # Fetch cart products related to this cart
+                cart_products = CartProduct.objects.filter(cart=cart)
             except Cart.DoesNotExist:
-                cart = None  # cart not found, treat as no cart
+                cart = None
 
         context["cart"] = cart
+        context["cart_products"] = cart_products
         return context
 
 
