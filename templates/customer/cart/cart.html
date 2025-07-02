@@ -27,7 +27,7 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th class="product-remove">Remove</th>
+                                        <th class="product-remove">SN</th>
                                         <th class="product-thumbnail">Image</th>
                                         <th class="product-name">Name</th>
                                         <th class="product-edit">Rate</th>
@@ -39,9 +39,7 @@
                                 <tbody>
                                     {% for cp in cart.cartproduct_set.all %}
                                     <tr>
-                                        <td class="product-remove">
-                                            <a href="#"><i class="pe-7s-close"></i></a>
-                                        </td>
+                                        <td class="product-remove">{{ forloop.counter }}</td>
 
                                         <!-- Product image -->
                                         <td class="product-thumbnail">
