@@ -3,8 +3,19 @@ from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.db.models import Prefetch
-from django.shortcuts import render, get_object_or_404
-from .models import Product, Category
+from django.shortcuts import redirect, render, get_object_or_404
+from .models import Cart, CartProduct, Product, Category
+
+
+class EcomMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        cart_id = request.session.get("cart_id")
+        if cart_id:
+            cart_obj = Cart.objects.get(id=cart_id)
+            if request.user.is_authenticated and request.user.CustomUser:
+                cart_obj.CustomUser = request.user.CustomUser
+                cart_obj.save()
+        return super().dispatch(request, *args, **kwargs)
 
 
 class HomeView(ListView):
@@ -73,3 +84,8 @@ class ProductDetailView(View):
             "customer/product_details/product_Details.html",
             {"product": product},
         )
+
+
+class MyCartView(EcomMixin, View):
+    def get(self, request):
+        return render(request, "customer/product_details/my_cart.html")

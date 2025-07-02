@@ -4835,3 +4835,15 @@ h1.thank-you {
   background: #f6416c none repeat scroll 0 0;
   color: #fff;
 }
+
+
+
+
+.color-box-product {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ccc;
+  margin-right: 8px;
+  vertical-align: middle;
+}

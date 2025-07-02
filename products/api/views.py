@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.core.cache import cache
 from django.db.models import Prefetch
 
-from products.models import Product, Category, ProductVariant, Color
+from products.models import Product, Category, Color
 from products.api.serializers import (
     NewProductSerializer,
     FeaturedCategorySerializer,
