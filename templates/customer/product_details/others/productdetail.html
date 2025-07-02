@@ -42,7 +42,7 @@
                     <div class="pro-color">
                         <span>Color:</span>
                         <a href="#" class="color-box-product" title="{{ product.color.name }}"
-                            style="background-color: {{ product.color.name|lower }};"></a>
+                            style="background-color: {{ product.color.name|lower }};"> </a>
                         <span></span>
                     </div>
 
@@ -59,13 +59,10 @@
 
                     <!-- Quantity & Add to Cart -->
                     <div class="product-counts fix margin-top-80">
-                        <form action="#">
-                            <div class="cart-plus-minus">
-                                <input type="text" value="1" />
-                            </div>
-                        </form>
                         <div class="single-pro-add-cart">
-                            <a class="shop-now" href="{% url 'add_to_cart' product.pk %}">Add to cart</a>
+                            <a class="shop-now " style="margin-bottom: 10px;"
+                                href="{% url 'add_to_cart' product.pk %}">Add to
+                                cart</a>
                         </div>
                     </div>
 

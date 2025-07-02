@@ -196,7 +196,9 @@ class Order(models.Model):
     subtotal = models.PositiveIntegerField()
     discount = models.PositiveIntegerField()
     total = models.PositiveIntegerField()
-    order_status = models.CharField(max_length=50, choices=ORDER_STATUS)
+    order_status = models.CharField(
+        max_length=50, choices=ORDER_STATUS, default="Order Received"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

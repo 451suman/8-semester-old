@@ -26,6 +26,12 @@ class CustomerSignUpView(View):
         return render(request, "customer/accounts/signup.html", {"form": form})
 
 
+from django.views.generic.edit import FormView
+from django.contrib.auth import login
+from django.urls import reverse_lazy
+from .forms import CustomerLoginForm
+
+
 class CustomerLoginView(FormView):
     template_name = "customer/accounts/login.html"
     form_class = CustomerLoginForm
@@ -34,23 +40,23 @@ class CustomerLoginView(FormView):
     def form_valid(self, form):
         email = form.cleaned_data["email"]
         password = form.cleaned_data["password"]
-        user = authenticate(self.request, email=email, password=password)
 
-        if user is None:
-            return self.form_invalid(form, message="Invalid email or password")
+        try:
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            form.add_error(None, "Invalid email or password")
+            return self.form_invalid(form)
 
+        if not user.check_password(password):
+            form.add_error(None, "Invalid email or password")
+            return self.form_invalid(form)
         if not user.is_verified:
-            return self.form_invalid(form, message="Account not verified")
+            form.add_error(None, "Account not verified")
+            return self.form_invalid(form)
 
-        if user.is_active:
-            login(self.request, user)
-            return super().form_valid(form)
-        else:
-            return self.form_invalid(form, message="Account is inactive")
+        if not user.is_active:
+            form.add_error(None, "Account is inactive")
+            return self.form_invalid(form)
 
-    def form_invalid(self, form, message=None):
-        return render(
-            self.request,
-            self.template_name,
-            {"form": form, "error": message},
-        )
+        login(self.request, user)
+        return super().form_valid(form)

@@ -1,12 +1,14 @@
 from django.urls import include, path
 
 from products.views import (
-    EmpytCartView,
+    CheckoutView,
+    EmptyCartView,
     HomeView,
     ProductDetailView,
     ProductListView,
     MyCartView,
     AddToCartView,
+    ManageCartView,
 )
 
 urlpatterns = [
@@ -15,5 +17,7 @@ urlpatterns = [
     path("detail/<str:slug>/", ProductDetailView.as_view(), name="product_detail"),
     path("add-to-cart/<int:pk>/", AddToCartView.as_view(), name="add_to_cart"),
     path("cart/", MyCartView.as_view(), name="my-cart"),
-    path("empty-cart/", EmpytCartView.as_view(), name="empty-cart"),
+    path("empty-cart/", EmptyCartView.as_view(), name="empty-cart"),
+    path("manage-cart/<int:pk>/", ManageCartView.as_view(), name="managecart"),
+    path("checkout/", CheckoutView.as_view(), name="checkout"),
 ]

@@ -10,6 +10,9 @@ class CustomUserCreationForm(UserCreationForm):
         fields = ("email", "full_name", "phone", "address", "password1", "password2")
 
 
+from django import forms
+
+
 class CustomerLoginForm(forms.Form):
-    email = forms.EmailField(widget=forms.TextInput())
-    password = forms.CharField(widget=forms.PasswordInput())
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)

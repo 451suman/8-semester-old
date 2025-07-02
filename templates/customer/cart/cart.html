@@ -65,9 +65,9 @@
                                         <td class="product-price"><span class="amount">{{ cp.quantity }}</span></td>
                                         <td class="product-price"><span class="amount">Rs.{{ cp.subtotal }}</span></td>
                                         <td class="product-add-to-cart-buttons">
-                                            <a href="#">+</a>
-                                            <a href="#">-</a>
-                                            <a href="#">x</a>
+                                            <a href="{% url 'managecart' cp.id %}?action=inc"">+</a>
+                                            <a href=" {% url 'managecart' cp.id %}?action=dcr">-</a>
+                                            <a href="{% url 'managecart' cp.id %}?action=rmv">x</a>
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -78,10 +78,8 @@
 
                     <!-- Clear Cart Button -->
                     <div class="cart-clear-button text-right" style="margin-top: 20px;">
-                        <form method="POST" action="{% url 'empty-cart' %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">Clear Cart</button>
-                        </form>
+
+                        <button class="btn btn-danger"><a href="{% url 'empty-cart' %}">Clear Cart</a></button>
                     </div>
 
                     <!-- Grand Total and Checkout -->
@@ -90,7 +88,7 @@
                         <div class="col-lg-4 col-md-12 offset-lg-8">
                             <div class="grand-totall text-right">
                                 <h4>Grand Total <span>Rs. {{ cart.total }}</span></h4>
-                                <a href="" class="btn btn-primary">Proceed to Checkout</a>
+                                <a href="{% url 'checkout' %}" class="btn btn-primary">Proceed to Checkout</a>
                             </div>
                         </div>
                     </div>
