@@ -1,5 +1,5 @@
 from django.core.cache import cache
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.db.models import Prefetch
@@ -86,6 +86,80 @@ class ProductDetailView(View):
         )
 
 
-class MyCartView(EcomMixin, View):
-    def get(self, request):
-        return render(request, "customer/product_details/my_cart.html")
+class AddToCartView(EcomMixin, View):
+    def get(self, request, pk):
+        # Get product
+        product_obj = Product.objects.get(id=pk)
+        # Check if cart exists
+        cart_id = self.request.session.get("cart_id", None)
+        if cart_id:
+            cart_obj = Cart.objects.get(id=cart_id)
+            # Check if the product is already in the cart
+            this_product_in_cart = cart_obj.cartproduct_set.filter(product=product_obj)
+
+            # Items already in cart
+            if this_product_in_cart.exists():
+                cartproduct = this_product_in_cart.last()
+                cartproduct.quantity += 1
+                cartproduct.subtotal += product_obj.current_price
+                cartproduct.save()
+                cart_obj.total += product_obj.current_price
+                cart_obj.save()
+
+            # New item is added in cart
+            else:
+                cartproduct = CartProduct.objects.create(
+                    cart=cart_obj,
+                    product=product_obj,
+                    rate=product_obj.current_price,
+                    quantity=1,
+                    subtotal=product_obj.current_price,
+                )
+                cart_obj.total += product_obj.current_price
+                cart_obj.save()
+        else:
+            cart_obj = Cart.objects.create(total=0)
+
+            cartproduct = CartProduct.objects.create(
+                cart=cart_obj,
+                product=product_obj,
+                rate=product_obj.current_price,
+                quantity=1,
+                subtotal=product_obj.current_price,
+            )
+            cart_obj.total += product_obj.current_price
+            cart_obj.save()
+            request.session["cart_id"] = cart_obj.id  # Save cart_id in session
+
+        # Redirect to the cart view
+        return redirect("my-cart")
+
+
+class MyCartView(EcomMixin, TemplateView):
+    template_name = "customer/cart/cart.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cart_id = self.request.session.get("cart_id")
+
+        cart = None
+        if cart_id:
+            try:
+                cart = Cart.objects.get(id=cart_id)
+            except Cart.DoesNotExist:
+                cart = None  # cart not found, treat as no cart
+
+        context["cart"] = cart
+        return context
+
+
+class EmpytCartView(EcomMixin, View):
+    def get(self, request, *args, **kwargs):
+        cart_id = request.session.get("cart_id", None)
+        if cart_id:
+            cart = Cart.objects.get(id=cart_id)
+            # select all cart product and delete using cart id
+            cart.cartproduct_set.all().delete()
+            cart.total = 0
+            cart.save()
+        return redirect("my-cart")

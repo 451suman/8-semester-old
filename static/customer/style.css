@@ -2543,15 +2543,15 @@ select {
 }
 
 .page-banner-area.photo-2 {
-  background: rgba(0, 0, 0, 0) url("img/banner/page-banner/2.jpg") no-repeat scroll center center;
+  background: rgba(0, 0, 0, 0) url("images/banner.png") no-repeat scroll center center;
 }
 
 .page-banner-area.photo-3 {
-  background: rgba(0, 0, 0, 0) url("img/banner/page-banner/3.jpg") no-repeat scroll center center;
+  background: rgba(0, 0, 0, 0) url("images/banner.png") no-repeat scroll center center;
 }
 
 .page-banner-area.photo-4 {
-  background: rgba(0, 0, 0, 0) url("img/banner/page-banner/4.jpg") no-repeat scroll center center;
+  background: rgba(0, 0, 0, 0) url("images/banner.png") no-repeat scroll center center;
 }
 
 /* ---------------- Background Image --------------- */
@@ -4846,4 +4846,11 @@ h1.thank-you {
   border: 1px solid #ccc;
   margin-right: 8px;
   vertical-align: middle;
+}
+
+.product-add-to-cart-buttons a {
+  padding: 7px;
+  background-color: grey;
+  border-radius: 100%;
+  color: white;
 }
