@@ -39,7 +39,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
     address = models.CharField(max_length=255)
     date_joined = models.DateTimeField(default=timezone.now)
     otp = models.CharField(max_length=6, null=True, blank=True)
-    otp_date = models.DateTimeField(auto_now_add=True , null=True, blank=True)
+    otp_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     objects = CustomUserManager()
 
     USERNAME_FIELD = "email"

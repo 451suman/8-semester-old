@@ -260,7 +260,7 @@ class CheckoutView(LoginRequiredMixin, CreateView):
                     self.request, "An order has already been placed for this cart."
                 )
                 return redirect(self.success_url)
-            form.instance.customer = self.request.user.customer
+            form.instance.user = self.request.user
             form.instance.cart = cart_obj
             form.instance.subtotal = cart_obj.total
             form.instance.discount = 0
@@ -275,3 +275,20 @@ class CheckoutView(LoginRequiredMixin, CreateView):
             return redirect("home")
 
         return super().form_valid(form)
+
+
+class OrderListView(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = "customer/order/orderlist/orderlist.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["orders"] = Order.objects.filter(user=self.request.user)
+        return context
+
+
+
+class CustomerOrderDetailView(LoginRequiredMixin, DetailView):
+    model = Order
+    template_name = "customer/order/orderdetail/customerorderdetail.html"
+    context_object_name = "ord_obj"

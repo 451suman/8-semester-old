@@ -2,30 +2,31 @@
     <div class="your-order">
         <h3 class="title-7 margin-bottom-50">Your Order</h3>
         <div class="your-order-table table-responsive">
-            <table>
+            <table style="color: black !important;">
                 <thead>
                     <tr>
-                        <th class="product-name">Product</th>
-                        <th class="product-total">Total</th>
+                        <th class="product-name"><strong>Image</strong></th>
+                        <th class="product-name"><strong>Product</strong></th>
+                        <th class="product-total"><strong>Total</strong></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="product-name">Lorem Ipsum comes (1)</td>
-                        <td class="product-total">$499.00</td>
-                    </tr>
-                    <tr>
-                        <td class="product-name">Extremes of Good (3) </td>
-                        <td class="product-total">$559.00</td>
-                    </tr>
-                    <tr>
-                        <td class="product-name">Lorem Ipsum comes (1)</td>
-                        <td class="product-total">$320.00</td>
+                    {% for cp in cart.cartproduct_set.all %}
 
                     <tr>
-                        <td class="product-name order-total">Order Total</td>
-                        <td class="product-total order-total">$1378.00</td>
+                        <td><img src="{{cp.product.product_images.first.image.url}}" alt=""
+                                style="width: 150px; height: 100px;"></td>
+                        <td class="product-name">{{cp.product.name}} X {{cp.quantity}}</td>
+                        <td class="product-total">Rs.{{cp.subtotal}}</td>
                     </tr>
+                    {% endfor %}
+                    <tr>
+                        <td></td>
+                        <td class="product-name order-total">Order Total</td>
+                        <td class="product-total order-total">Rs.{{cart.total}}</td>
+                    </tr>
+
+
                 </tbody>
             </table>
             <div class="payment-method">
@@ -54,9 +55,7 @@
                     </div>
                     ACCORDION END
                 </div> -->
-                <div class="order-button-payment">
-                    <input type="submit" value="Place order" />
-                </div>
+
             </div>
         </div>
     </div>

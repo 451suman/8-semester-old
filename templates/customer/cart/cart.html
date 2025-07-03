@@ -37,6 +37,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {% if cart %}
                                     {% for cp in cart.cartproduct_set.all %}
                                     <tr>
                                         <td class="product-remove">{{ forloop.counter }}</td>
@@ -69,6 +70,14 @@
                                         </td>
                                     </tr>
                                     {% endfor %}
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="">x</td>
+                                        <td colspan="6" class="text-center text-danger">
+                                            <h5>Cart is Empty</h5>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
                                 </tbody>
                             </table>
                         </div>
