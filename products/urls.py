@@ -1,16 +1,21 @@
 from django.urls import include, path
 
 from products.views import (
+    CategoryProductListView,
     CheckoutView,
     CustomerOrderDetailView,
     EmptyCartView,
     HomeView,
+    VendorNamelistView,
+    VendorProductListView,
+    categoryNamelistView,
     OrderListView,
     ProductDetailView,
     ProductListView,
     MyCartView,
     AddToCartView,
     ManageCartView,
+    FilerProductView,
 )
 
 urlpatterns = [
@@ -18,6 +23,22 @@ urlpatterns = [
     # product
     path("list/", ProductListView.as_view(), name="product_list"),
     path("detail/<str:slug>/", ProductDetailView.as_view(), name="product_detail"),
+    # category product list
+    path(
+        "category/<str:slug>/",
+        CategoryProductListView.as_view(),
+        name="category_product_list",
+    ),
+    path("categoris/", categoryNamelistView.as_view(), name="categoris_name_list"),
+    # vendor product list
+    path("vendor/", VendorNamelistView.as_view(), name="vendor_name_list"),
+    path(
+        "vendor/<int:pk>/",
+        VendorProductListView.as_view(),
+        name="vendor_product_list",
+    ),
+    # price filer
+    path("price-filter/", FilerProductView.as_view(), name="price-filter"),
     # cart
     path("add-to-cart/<int:pk>/", AddToCartView.as_view(), name="add_to_cart"),
     path("cart/", MyCartView.as_view(), name="my-cart"),

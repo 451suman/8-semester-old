@@ -6,6 +6,7 @@ from django.db.models import Prefetch
 from django.shortcuts import redirect, render, get_object_or_404
 
 from products.forms import CheckoutForm
+from vendor.models import Vendor
 from .models import Cart, CartProduct, Order, Product, Category
 from django.contrib import messages
 
@@ -71,13 +72,38 @@ class HomeView(ListView):
 # Query 7: Auth user query (accounts_customuser)
 
 
+from django.views.generic import ListView
+from .models import Product, Category
+
+
+def category_list_func(request):
+    categories = Category.objects.all()
+    return categories
+
+
+def vendor_list_func(request):
+    vendors = Vendor.objects.filter(is_authorized=True).order_by("arranged")
+    return vendors
+
+
 class ProductListView(ListView):
+    model = Product
     template_name = "customer/product/product_list.html"
-    queryset = Product.objects.prefetch_related("product_images").order_by(
-        "-created_at"
-    )
     context_object_name = "products"
     paginate_by = 9
+
+    def get_queryset(self):
+        # Prefetch related product_images and order by created_at descending
+        return Product.objects.prefetch_related("product_images").order_by(
+            "-created_at"
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add categories to the context
+        context["categories"] = category_list_func(self.request)
+        context["vendors"] = vendor_list_func(self.request)
+        return context
 
 
 class ProductDetailView(View):
@@ -87,6 +113,7 @@ class ProductDetailView(View):
             slug=slug,
             is_active=True,
         )
+
         return render(
             request,
             "customer/product_details/product_Details.html",
@@ -287,8 +314,75 @@ class OrderListView(LoginRequiredMixin, ListView):
         return context
 
 
-
 class CustomerOrderDetailView(LoginRequiredMixin, DetailView):
     model = Order
     template_name = "customer/order/orderdetail/customerorderdetail.html"
     context_object_name = "ord_obj"
+
+
+class CategoryProductListView(EcomMixin, ListView):
+    model = Product
+    template_name = "customer/product/product_list.html"
+    context_object_name = "products"
+    paginate_by = 1
+
+    def get_queryset(self):
+        return Product.objects.filter(category__slug=self.kwargs["slug"])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = category_list_func(self.request)
+        context["vendors"] = vendor_list_func(self.request)
+        return context
+
+
+from django.views.generic import ListView
+from .models import Category
+
+
+class categoryNamelistView(ListView):
+    model = Category
+    template_name = "customer/names_list/categoriesnamelist.html"
+    context_object_name = "names"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Categories"
+        return context
+
+
+class FilerProductView(View):
+    def get(self, request):
+        min = request.GET.get("min")
+        max = request.GET.get("max")
+
+        product_filter = Product.objects.filter(current_price__range=(min, max))
+        categories = category_list_func(self.request)
+        vendors = vendor_list_func(self.request)
+        return render(
+            request,
+            "customer/product/product_list.html",
+            {"products": product_filter, "categories": categories, "vendors": vendors},
+        )
+
+
+class VendorNamelistView(ListView):
+    model = Vendor
+    template_name = "customer/names_list/vendorNameList.html"
+    context_object_name = "vendors"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Vendors"
+        return context
+
+
+class VendorProductListView(ListView):
+    model = Product
+    template_name = "customer/product/product_list.html"
+    context_object_name = "products"
+    paginate_by = 9
+
+    def get_queryset(self):
+        vendor_pk = self.kwargs.get("pk")
+        return Product.objects.filter(vendor__pk=vendor_pk)

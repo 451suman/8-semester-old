@@ -16,9 +16,12 @@ class Vendor(TimeStampedModel):
     address = models.CharField(max_length=255)
     pan_no = models.CharField(max_length=15)
     reg_no = models.CharField(max_length=15)
+    is_authorized = models.BooleanField(default=False)
+    shop_image = models.ImageField(upload_to="vendor/shop/", null=True, blank=True)
     secret_key = models.CharField(max_length=255, null=True, blank=True)
     access_key = models.CharField(max_length=255, null=True, blank=True)
     citizenship = models.CharField(max_length=255, null=True, blank=True)
+    arranged = models.PositiveIntegerField(null=True, blank=True)
 
     citizenship_front_image = models.ImageField(
         upload_to="vendor/citizenship/", null=True, blank=True
