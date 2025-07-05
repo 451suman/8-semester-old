@@ -5,9 +5,10 @@ from django.views import View
 from django.db.models import Prefetch
 from django.shortcuts import redirect, render, get_object_or_404
 
+from accounts.models import CustomUser
 from products.forms import CheckoutForm
 from vendor.models import Vendor
-from .models import Cart, CartProduct, Order, Product, Category
+from .models import Cart, CartProduct, Order, Product, Category, Review
 from django.contrib import messages
 
 
@@ -106,19 +107,71 @@ class ProductListView(ListView):
         return context
 
 
-class ProductDetailView(View):
-    def get(self, request, slug):
-        product = get_object_or_404(
-            Product.objects.prefetch_related("product_images"),
-            slug=slug,
-            is_active=True,
-        )
+# class ProductDetailView(View):
+#     def get(self, request, slug):
+#         product = get_object_or_404(
+#             Product.objects.prefetch_related("product_images"),
+#             slug=slug,
+#             is_active=True,
+#         )
 
-        return render(
-            request,
-            "customer/product_details/product_Details.html",
-            {"product": product},
+#         return render(
+#             request,
+#             "customer/product_details/product_details.html",
+#             {"product": product},
+#         )
+from django.shortcuts import get_object_or_404
+from django.views.generic import TemplateView
+from django.db.models import Avg, Prefetch
+
+
+class ProductDetailView(TemplateView):
+    template_name = "customer/product_details/product_details.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        slug = self.kwargs["slug"]
+        user = self.request.user
+
+        # Optimize product fetch with related objects to avoid extra queries in template
+        product = get_object_or_404(
+            Product.objects.select_related(
+                "category", "brand", "color", "vendor"
+            ).prefetch_related("tag", "sizes", "product_images"),
+            slug=slug,
         )
+        context["product"] = product
+
+        context["related_products"] = product.category.products.exclude(
+            id=product.id
+        ).order_by("-created_at")
+
+        # Prefetch reviews with user info to avoid query in template
+        reviews_qs = Review.objects.filter(product=product).select_related("user")
+
+        context["reviewcount"] = reviews_qs.count()
+        context["all_review"] = reviews_qs
+
+        # Average rating with a single aggregate query
+        average_rating = reviews_qs.aggregate(avg=Avg("rating"))["avg"]
+        context["average_rating"] = round(average_rating) if average_rating else 0
+
+        can_review = False
+        if user.is_authenticated:
+            # Check if user has completed an order with the product
+            has_completed_order = Order.objects.filter(
+                user=user,
+                order_status="Order Completed",
+                cart__cartproduct__product=product,
+            ).exists()
+
+            # Check if user already reviewed the product
+            has_reviewed = reviews_qs.filter(user=user).exists()
+
+            can_review = has_completed_order and not has_reviewed
+
+        context["can_review"] = can_review
+        return context
 
 
 from django.views import View

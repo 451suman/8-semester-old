@@ -1,5 +1,18 @@
 # 🛑 Python & Virtual Environment
 venv/
+
+.venv
+env/
+venv/
+ENV/
+env.bak/
+
+uvenv/
+.uvenv
+venv.bak/
+uvenv.bak/
+
+
 *.pyc
 *.pyo
 *.pyd

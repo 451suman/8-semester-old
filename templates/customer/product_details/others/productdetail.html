@@ -43,7 +43,15 @@
                         <span>Color:</span>
                         <a href="#" class="color-box-product" title="{{ product.color.name }}"
                             style="background-color: {{ product.color.name|lower }};"> </a>
-                        <span></span>
+                        <span>
+                           
+                        </span>
+                         Total Rating:{% for i in "12345" %}
+                            {% if forloop.counter <= average_rating %} ⭐ {% else %} <i class="sp-star"></i>
+                                <!-- Empty star for the remaining ones -->
+                                {% endif %}
+                                {% endfor %}
+
                     </div>
 
 

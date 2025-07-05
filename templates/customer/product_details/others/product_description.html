@@ -18,60 +18,19 @@
                 <ul>
                     <li>
                         <div class="product-comments">
-                            <img src="img/author.jpg" alt="" />
-                            <div class="product-comments-content">
-                                <p><strong>admin</strong> -
-                                    <span>March 7, 2015:</span>
-                                    <span class="pro-comments-rating">
-                                        <i class="sp-star"></i>
-                                        <i class="sp-star"></i>
-                                        <i class="sp-star"></i>
-                                        <i class="sp-star"></i>
-                                    </span>
-                                </p>
-                                <div class="desc">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
-                                    fringilla augue nec est tristique auctor. Donec non est at
-                                    libero vulputate rutrum.
-                                </div>
-                            </div>
                         </div>
                     </li>
                 </ul>
-                <div class="review-form-wrapper">
-                    <h3>Add a review</h3>
-                    <form action="#">
-                        <input type="text" placeholder="your name" name="firstname" />
-                        <input type="email" placeholder="your email" name="email" />
-                        <div class="your-rating">
-                            <h5>Your Rating</h5>
-                            <span>
-                                <a href="#"><i class="sp-star"></i></a>
-                                <a href="#"><i class="sp-star"></i></a>
-                            </span>
-                            <span>
-                                <a href="#"><i class="sp-star"></i></a>
-                                <a href="#"><i class="sp-star"></i></a>
-                                <a href="#"><i class="sp-star"></i></a>
-                            </span>
-                            <span>
-                                <a href="#"><i class="sp-star"></i></a>
-                                <a href="#"><i class="sp-star"></i></a>
-                                <a href="#"><i class="sp-star"></i></a>
-                                <a href="#"><i class="sp-star"></i></a>
-                            </span>
-                            <span>
-                                <a href="#"><i class="sp-star"></i></a>
-                                <a href="#"><i class="sp-star"></i></a>
-                                <a href="#"><i class="sp-star"></i></a>
-                                <a href="#"><i class="sp-star"></i></a>
-                                <a href="#"><i class="sp-star"></i></a>
-                            </span>
-                        </div>
-                        <textarea id="product-message" cols="30" rows="10" placeholder="Your Rating"></textarea>
-                        <input type="submit" value="submit" />
-                    </form>
+                <div role="tabpanel" class="tab-pane" id="reviews">
+                    <div class="product-page-comments">
+                        {% include 'customer/product_details/others/product_review.html' %}
+
+                        {% include 'customer/product_details/others/reveiw_forms.html' %}
+                        
+
+                  </div>
                 </div>
+
             </div>
         </div>
     </div>

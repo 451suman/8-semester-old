@@ -209,9 +209,9 @@ class Review(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     rating = models.PositiveIntegerField(default=1)
+    comment = models.TextField(null=True, blank=True)
     # Assuming a rating scale of 1-5
-    review_text = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Review by {self.customer.full_name} for {self.product.title}"
+        return f"Review by {self.user.full_name} for {self.product.name}"
