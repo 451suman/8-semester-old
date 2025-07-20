@@ -6,7 +6,7 @@
         </li>
         {% for vendor in vendors %}
         <li>
-            <a href="">{{ vendor.vendor_name }}</a>
+            <a href="{% url 'vendor_product_list' vendor.slug %}">{{ vendor.vendor_name }}</a>
         </li>
 
         {% endfor %}

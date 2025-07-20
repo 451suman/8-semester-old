@@ -1,6 +1,7 @@
 from django.urls import include, path
 
 from products.views import (
+    BrandProductListView,
     CategoryProductListView,
     CheckoutView,
     CustomerOrderDetailView,
@@ -32,11 +33,11 @@ urlpatterns = [
     path("categoris/", categoryNamelistView.as_view(), name="categoris_name_list"),
     # vendor product list
     path("vendor/", VendorNamelistView.as_view(), name="vendor_name_list"),
-    path(
-        "vendor/<int:pk>/",
-        VendorProductListView.as_view(),
-        name="vendor_product_list",
-    ),
+    path("vendor/<str:slug>/", VendorProductListView.as_view(), name="vendor_product_list"),
+
+    # Brand product list 
+    path("brand/<int:id>/", BrandProductListView.as_view(), name="brand_product_list"),
+
     # price filer
     path("price-filter/", FilerProductView.as_view(), name="price-filter"),
     # cart

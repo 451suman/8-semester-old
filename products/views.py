@@ -8,7 +8,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from accounts.models import CustomUser
 from products.forms import CheckoutForm
 from vendor.models import Vendor
-from .models import Cart, CartProduct, Order, Product, Category, Review
+from .models import Brand, Cart, CartProduct, Order, Product, Category, Review
 from django.contrib import messages
 
 
@@ -102,6 +102,10 @@ def vendor_list_func(request):
     return vendors
 
 
+def brands_list_func (request):
+    brands = Brand.objects.all()
+    return brands
+
 class ProductListView(ListView):
     model = Product
     template_name = "customer/product/product_list.html"
@@ -119,6 +123,7 @@ class ProductListView(ListView):
         # Add categories to the context
         context["categories"] = category_list_func(self.request)
         context["vendors"] = vendor_list_func(self.request)
+        context["brands"] = brands_list_func(self.request)
         return context
 
 
@@ -413,6 +418,8 @@ class CategoryProductListView(EcomMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["categories"] = category_list_func(self.request)
         context["vendors"] = vendor_list_func(self.request)
+        context["brands"] = brands_list_func(self.request)
+
         return context
 
 
@@ -464,5 +471,37 @@ class VendorProductListView(ListView):
     paginate_by = 9
 
     def get_queryset(self):
-        vendor_pk = self.kwargs.get("pk")
-        return Product.objects.filter(vendor__pk=vendor_pk)
+        vendor_slug = self.kwargs.get("slug")
+        return Product.objects.filter(vendor__slug=vendor_slug)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = category_list_func(self.request)
+        context["vendors"] = vendor_list_func(self.request)
+        context["brands"] = brands_list_func(self.request)
+
+        return context
+
+
+
+
+
+class BrandProductListView(ListView):
+    model = Product
+    template_name = "customer/product/product_list.html"
+    context_object_name = "products"
+    paginate_by = 9
+
+    def get_queryset(self):
+        brand_id = self.kwargs.get("id")
+        return Product.objects.filter(brand__id=brand_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = category_list_func(self.request)
+        context["vendors"] = vendor_list_func(self.request)
+        context["brands"] = brands_list_func(self.request)
+
+        return context
+
+
