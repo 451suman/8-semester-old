@@ -50,24 +50,28 @@
                                         </a>
                                         <div class="pro-action">
                                             <!-- <a href="#" class="action-btn"><i -->
-                                                    <!-- class="sp-heart"></i><span>Wishlist</span></a> -->
+                                            <!-- class="sp-heart"></i><span>Wishlist</span></a> -->
                                             <a href="{% url 'add_to_cart' product.pk %}" class="action-btn"><i
                                                     class="sp-shopping-cart"></i><span>Add to
                                                     cart</span></a>
                                             <!-- <a href="#" class="action-btn"><i -->
-                                                    <!-- class="sp-compare-alt"></i><span>Compare</span></a> -->
+                                            <!-- class="sp-compare-alt"></i><span>Compare</span></a> -->
                                         </div>
                                     </div>
                                     <div class="product-brief">
                                         <div class="pro-rating">
-                                            <a href="#"><i class="sp-star rating-1"></i></a>
-                                            <a href="#"><i class="sp-star rating-2"></i></a>
-                                            <a href="#"><i class="sp-star rating-1"></i></a>
-                                            <a href="#"><i class="sp-star rating-1"></i></a>
-                                            <a href="#"><i class="sp-star rating-1"></i></a>
+                                            {% for i in "12345" %}
+                                            {% if forloop.counter <= product.average_rating %} ⭐ {% else %} <i
+                                                class="sp-star rating-2"></i></a>
+
+                                                {% endif %}
+                                                {% endfor %}
                                         </div>
-                                        <h2><a href="{% url 'product_detail' slug=product.slug %}">{{ product.name
-                                                }}</a></h2>
+                                        <h2>
+                                            <a href="{% url 'product_detail' slug=product.slug %}">
+                                                {{ product.name}}
+                                            </a>
+                                        </h2>
                                         <h3>${{ product.current_price }}</h3>
                                     </div>
                                 </div>

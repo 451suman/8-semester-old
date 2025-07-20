@@ -37,7 +37,13 @@
 {% else %}
 <div class="col-md-7 col-sm-12">
     <div class="panel panel-default">
+        {% if user.is_authenticated %}
         <div class="panel-heading"><strong>You Have Already Reviewed This Product.</strong></div>
+        {% else %}
+        <div class="panel-heading"><strong>Login To Review. 👉 <a href="{% url 'customer_login' %}">Click
+                    Here</a></strong>
+        </div>
+        {% endif %}
     </div>
 </div>
 

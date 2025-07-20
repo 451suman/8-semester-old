@@ -37,11 +37,13 @@
             </div>
             <div class="product-brief">
                 <div class="pro-rating">
-                    <a href="#"><i class="sp-star rating-1"></i></a>
-                    <a href="#"><i class="sp-star rating-1"></i></a>
-                    <a href="#"><i class="sp-star rating-1"></i></a>
-                    <a href="#"><i class="sp-star rating-1"></i></a>
-                    <a href="#"><i class="sp-star rating-2"></i></a>
+                    {% for i in "12345" %}
+                    {% if forloop.counter <= product.average_rating %} ⭐ {% else %} <i class="sp-star rating-2"></i></a>
+
+                        <!-- Empty star for the remaining ones -->
+                        {% endif %}
+                        {% endfor %}
+
                 </div>
                 <h2><a href="{% url 'product_detail' slug=product.slug %}">{{product.name}}</a></h2>
                 <h3>${{product.current_price}}</h3>
@@ -51,3 +53,4 @@
 
     </div>
 </div>
+<!-- average_rating -->

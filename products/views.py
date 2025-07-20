@@ -28,28 +28,34 @@ class EcomMixin(object):
         return super().dispatch(request, *args, **kwargs)
 
 
+from django.db.models import Avg, Prefetch
+
+
 class HomeView(ListView):
     template_name = "customer/home/home.html"
     model = Product
     context_object_name = "new_products"
 
     def get_queryset(self):
-        # Try to get cached new_products queryset
         new_products = cache.get("new_products")
         if not new_products:
-            new_products = Product.objects.prefetch_related("product_images").order_by(
-                "-created_at"
-            )[:5]
+            new_products = (
+                Product.objects.prefetch_related("product_images")
+                .annotate(average_rating=Avg("review__rating"))
+                .order_by("-created_at")[:5]
+            )
             # cache.set("new_products", new_products, 60)
         return new_products
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Try to get cached categories
+        # Cache categories with annotated product ratings
         categories = cache.get("categories")
         if not categories:
-            product_qs = Product.objects.prefetch_related("product_images")
+            product_qs = Product.objects.prefetch_related("product_images").annotate(
+                average_rating=Avg("review__rating")
+            )
             categories = (
                 Category.objects.prefetch_related(
                     Prefetch("products", queryset=product_qs)
@@ -60,6 +66,15 @@ class HomeView(ListView):
             # cache.set("categories", categories, 60)
 
         context["categories"] = categories
+
+        top_rated = (
+            Product.objects.prefetch_related("product_images")
+            .annotate(average_rating=Avg("review__rating"))
+            .order_by("-average_rating")[:9]
+        )
+
+        context["top_rated"] = top_rated
+
         return context
 
 
@@ -153,8 +168,20 @@ class ProductDetailView(TemplateView):
         context["all_review"] = reviews_qs
 
         # Average rating with a single aggregate query
-        average_rating = reviews_qs.aggregate(avg=Avg("rating"))["avg"]
-        context["average_rating"] = round(average_rating) if average_rating else 0
+        # average_rating = reviews_qs.aggregate(avg=Avg("rating"))["avg"]
+        # context["average_rating"] = round(average_rating) if average_rating else 0
+
+        total_rating = 0
+        count = 0
+
+        for review in reviews_qs:
+            total_rating += review.rating
+            count += 1
+        if count:
+            average_rating = total_rating / count
+        else:
+            average_rating = 0
+        context["average_rating"] = round(average_rating, 2)
 
         can_review = False
         if user.is_authenticated:
